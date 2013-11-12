@@ -1,0 +1,14 @@
+language: cpp
+compiler:
+  - clang
+
+before_install:
+  - /bin/bash ./.yotta_setup.sh
+
+install:
+  # !!! TODO ... install toolchain
+  - yotta target x86-linux-native
+
+script:
+  - yotta install
+  - yotta build

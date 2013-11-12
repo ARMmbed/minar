@@ -1,0 +1,37 @@
+{
+  "name": "minar",
+  "version": "0.4.1",
+  "description": "The mbed OS scheduler.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ARMmbed/minar.git"
+  },
+  "homepage": "https://github.com/ARMmbed/minar",
+  "bugs": {
+    "url": "http://github.com/ARMmbed/minar/issues",
+    "email": "project@hostname.com"
+  },
+  "author": "James Crosby <James.Crosby@arm.com>",
+  "licenses": [
+    {
+      "url": "https://spdx.org/licenses/Apache-2.0",
+      "type": "Apache-2.0"
+    }
+  ],
+  "dependencies": {
+    "compiler-polyfill": "~1.0.3",
+    "minar-platform": "~0.1.0",
+    "mbed-core": "~0.2.0",
+    "mbed-util": "~0.0.6"
+  },
+  "scripts": {
+    "testReporter": [
+      "mbedgt",
+      "--digest",
+      "stdin",
+      "-v",
+      "-V"
+    ]
+  }
+}
