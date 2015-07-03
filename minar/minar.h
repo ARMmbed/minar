@@ -4,7 +4,7 @@
 #define __MINAR_MINAR_H__
 
 #include "compiler-polyfill/attributes.h"
-#include "minar_platform/minar_platform.h"
+#include "minar_platform.h"
 //#include "mbed.h"
 // [TODO] change this
 #include "mbed/Event.h"

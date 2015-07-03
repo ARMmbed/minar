@@ -25,6 +25,11 @@
     "mbed-core": "~0.2.0",
     "mbed-util": "~0.0.6"
   },
+  "targetDependencies": {
+    "mbed": {
+      "minar-platform" : "*"
+    }
+  },
   "scripts": {
     "testReporter": [
       "mbedgt",

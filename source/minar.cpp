@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#include "minar_platform/minar_platform.h"
+#include "minar/minar_platform.h"
 
 #include "mbed-util/ExtendablePoolAllocator.h"
 #include "mbed-util/CriticalSectionLock.h"
