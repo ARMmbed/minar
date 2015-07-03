@@ -27,7 +27,7 @@
   },
   "targetDependencies": {
     "mbed": {
-      "minar-platform" : "*"
+      "minar-platform-mbed" : "*"
     }
   },
   "scripts": {

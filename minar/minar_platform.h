@@ -4,7 +4,7 @@
 #define MINAR_PLATFORM_H__
 
 #include <stdint.h>
-#include "minar_platform/minar_platform_config.h"
+#include "minar_platform/minar_platform_types.h"
 
 namespace minar {
 namespace platform {
