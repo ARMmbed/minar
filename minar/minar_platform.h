@@ -1,7 +1,7 @@
 // Copyright (C) 2013 ARM Limited. All rights reserved.
 
-#ifndef MINAR_PLATFORM_H__
-#define MINAR_PLATFORM_H__
+#ifndef MINAR_PLATFORM_H
+#define MINAR_PLATFORM_H
 
 #include <stdint.h>
 #include "minar_platform/minar_platform_types.h"
@@ -30,4 +30,4 @@ void popDisableIRQState(irqstate_t);
 }; // namespace platform
 }; // namespace minar
 
-#endif // ndef MINAR_PLATFORM_H__
+#endif // ndef MINAR_PLATFORM_H
