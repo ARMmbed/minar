@@ -123,6 +123,10 @@ class Scheduler{
 /// convert milliseconds into the internal "ticks" time representation
 tick_t milliseconds(uint32_t miliseconds);
 
+/// convert ticks to milliseconds
+uint32_t ticks(tick_t ticks);
+
+
 /// Return the scheduled execution time of the current callback. This lags
 /// behind the wall clock time if the system is busy.
 ///

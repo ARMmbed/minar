@@ -495,6 +495,13 @@ minar::tick_t minar::milliseconds(uint32_t milliseconds){
     return (minar::tick_t) (minar::platform::Time_Mask & ticks);
 }
 
+/// convert ticks into the milliseconds time representation
+uint32_t minar::ticks(minar::platform::tick_t ticks){
+    uint64_t milliseconds = ((uint64_t)ticks * 1000U) / minar::platform::Time_Base;
+    assert(milliseconds <= 0xFFFFFFFF);
+    return (uint32_t)milliseconds;
+}
+
 /// Return the scheduled execution time of the current callback. This lags
 /// behind the wall clock time if the system is busy.
 ///
