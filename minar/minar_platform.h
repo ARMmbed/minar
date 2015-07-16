@@ -15,7 +15,7 @@ void init();
 
 /// @name Energy Management
 void sleep();
-void sleepUntil(tick_t until);
+void sleepFromUntil(tick_t now, tick_t until);
 
 
 /// @name Time
