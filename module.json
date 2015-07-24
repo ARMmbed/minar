@@ -1,6 +1,6 @@
 {
   "name": "minar",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "The mbed OS scheduler.",
   "private": true,
   "repository": {
@@ -27,7 +27,7 @@
   },
   "targetDependencies": {
     "mbed": {
-      "minar-platform-mbed" : "~0.0.1"
+      "minar-platform-mbed": "~0.0.1"
     }
   },
   "scripts": {
