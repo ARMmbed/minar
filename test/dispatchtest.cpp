@@ -21,7 +21,7 @@ static void toggleLED2()
     led2 = !led2;
 }
 
-int main()
+void app_start(int, char*[])
 {
     printf("Test starting\r\n");
 
@@ -32,7 +32,5 @@ int main()
     minar::Scheduler::postCallback(FunctionPointer0<void>(toggleLED2).bind())
         .period(minar::milliseconds(250))
         .tolerance(minar::milliseconds(10));
-
-    return minar::Scheduler::start();
 }
 

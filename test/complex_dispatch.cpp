@@ -47,7 +47,7 @@ static void stop_scheduler() {
     minar::Scheduler::stop();
 }
 
-int main() {
+void app_start(int, char*[]) {
     MBED_HOSTTEST_TIMEOUT(35);
     MBED_HOSTTEST_SELECT(default);
     MBED_HOSTTEST_DESCRIPTION(MINAR complex dispatch test);
