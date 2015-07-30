@@ -59,6 +59,7 @@ class Scheduler{
                 tick_t       m_tolerance;
                 tick_t       m_delay;
                 tick_t       m_period;
+                bool         m_posted;
         };
     public:
         // get the global scheduler instance

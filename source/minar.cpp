@@ -215,7 +215,7 @@ minar::Scheduler::CallbackAdder& minar::Scheduler::CallbackAdder::period(
 }
 
 minar::callback_handle_t minar::Scheduler::CallbackAdder::getHandle(){
-    if(m_cb){
+    if(!m_posted){
         minar::callback_handle_t temp = m_sched.data->postGeneric(
             // [FPTR] std::move was used below, is there a better way to do this?
             m_cb,
@@ -223,7 +223,7 @@ minar::callback_handle_t minar::Scheduler::CallbackAdder::getHandle(){
             m_period,
             m_tolerance
         );
-        m_cb.clear();
+        m_posted = true;
         return temp;
     }
     return NULL;
@@ -238,7 +238,8 @@ minar::Scheduler::CallbackAdder::CallbackAdder(Scheduler& sched, callback_t cb)
       m_cb(cb),
       m_tolerance(minar::milliseconds(50)),
       m_delay(minar::milliseconds(0)),
-      m_period(minar::milliseconds(0)){
+      m_period(minar::milliseconds(0)),
+      m_posted(false){
 }
 
 minar::Scheduler* minar::Scheduler::instance(){
@@ -443,7 +444,6 @@ int minar::SchedulerData::start(){
 
             if(!next->interval){
                 // release any reference-counted callback as early as possible
-                next->cb.clear();
                 delete next;
                 next = NULL;
             }
