@@ -18,10 +18,10 @@ In MINAR, an *event* is a pointer to a function, plus a specific binding of the 
 ```
 #include "mbed.h"
 
-void f1(void) {
+void f0(void) {
 }
 
-int f2(const char *arg) {
+int f1(const char *arg) {
 }
 
 class A {
@@ -32,12 +32,12 @@ public:
 
 void test() {
     A a;
-    FunctionPointer0<void> ptr_to_f1(f1);
-    FunctionPointer1<int, const char*> ptr_to_f2(f2);
+    FunctionPointer0<void> ptr_to_f0(f0);
+    FunctionPointer1<int, const char*> ptr_to_f1(f1);
     FunctionPointer1<void, int> ptr_to_m(&a, &A::m);
 
-    ptr_to_f1.call();
-    ptr_to_f2("test"); // you can also call directly, without 'call'
+    ptr_to_f0.call();
+    ptr_to_f1("test"); // you can also call directly, without 'call'
     ptr_to_m.call(0); // or simply 'ptr_to_m(0);'
 }
 ```
@@ -47,13 +47,14 @@ At the moment of writing, there are implementations of `FunctionPointer` for fun
 In order to create an event from a function pointer, its `bind` method needs to be called. `bind` takes a set of fixed values for the function's arguments (if the function has arguments) and creates a [FunctionPointerBind](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/FunctionPointerBind.h) instance.  `FunctionPointerBind` keeps a copy of those fixed values and allows one to call the function later with those fixed arguments without having to specify them again. This is best explained by an example. Building on top of the code above:
 
 ```
-FunctionPointerBind<void> bind_of_f1(ptr_to_f1.bind()); // f1 doesn't take any arguments
-FunctionPointerBind<int> bind_of_f2(ptr_to_f2.bind("test")); // bind the argument "test" to this specific instance of FunctionPointerBind
+// FunctionPointerBind is templated on the return type of the bound function
+FunctionPointerBind<void> bind_of_f0(ptr_to_f0.bind()); // f0 doesn't take any arguments
+FunctionPointerBind<int> bind_of_f1(ptr_to_f1.bind("test")); // bind the argument "test" to this FunctionPointerBind
 FunctionPointerBind<void> bind1_of_m(ptr_to_m.bind(0)); // bind 0 to this FunctionPointerBind
 FunctionPointerBind<void> bind2_of_m(ptr_to_m.bind(10)); // bind 10 to this FunctionPointerBind
 
-bind_of_f1.call(); // equivalent to ptr_to_f1.call()
-bind_of_f2();      // equivalent to ptr_to_f2.call("test")
+bind_of_f0.call(); // equivalent to ptr_to_f0.call()
+bind_of_f1();      // equivalent to ptr_to_f1.call("test")
 bind1_of_m();      // equivalent to ptr_to_m.call(0)
 bind2_of_m();      // equivalent to ptr_to_m.call(10)
 ```
@@ -74,11 +75,11 @@ In conclusion, using the mechanisms shown above, you can schedule any kind of fu
 To actually schedule an event, you call the `postCallback` function in MINAR. Building on top of the code above:
 
 ```
-minar::Scheduler::postCallback(bind_of_f1);
-// note that f2 above can't be an Event, since it returns something
+minar::Scheduler::postCallback(bind_of_f0);
+// note that f1 above can't be an Event, since it returns something
 ```
 
-`postCallback` adds `bind_of_f1` into the MINAR event queue, scheduling it to be executed as soon as possible.  When calling `postCallback` you can specify a few more attributes of the event:
+`postCallback` adds `bind_of_f0` into the MINAR event queue, scheduling it to be executed as soon as possible.  When calling `postCallback` you can specify a few more attributes of the event:
 
 - `period`: the event will run periodically with the given period
 - `delay`: the event will be executed after the specified delay
@@ -174,7 +175,7 @@ void f(int a) {
 minar::Scheduler::postCallback(FunctionPointer0<void>(f).bind(10));
 ```
 
-Be careful though: MINAR only keeps a copy of the `Event` instance itself and nothing else outside that. If the  event is bound to an object that goes out of scope before the event is scheduled, your program will likely not behave as expected (and might even crash):
+Be careful though: MINAR only keeps a copy of the `Event` instance itself and nothing else outside that. If the event is bound to an object that goes out of scope before the event is scheduled, your program will likely not behave as expected (and might even crash):
 
 ```
 class A {
@@ -233,6 +234,7 @@ MINAR encourages an asychronous programming style in which functions that are ex
 
 - MINAR is an event scheduler, always enabled in mbed OS
 - You can schedule events with MINAR. Events are regular C/C++ functions.
+- MINAR is not a pre-emptive scheduler. Control gets back to MINAR when the currently scheduled event finishes execution.
 - Events shouldn't take too much time to execute
 - Events functions should never block in an infinite loop
 - Your applications start with `app_start` now, not with `main`
