@@ -46,8 +46,8 @@ extern "C" {
 #endif
 
 // TODO: these values need some serious profiling
-#define MINAR_INITIAL_EVENT_POOL_SIZE           50
-#define MINAR_ADDITIONAL_EVENT_POOLS_SIZE       100
+#define MINAR_INITIAL_EVENT_POOL_SIZE           4
+#define MINAR_ADDITIONAL_EVENT_POOLS_SIZE       4
 
 using mbed::util::ExtendablePoolAllocator;
 using mbed::util::CriticalSectionLock;
