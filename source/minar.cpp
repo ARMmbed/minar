@@ -45,9 +45,20 @@ extern "C" {
 #define ytWarning(...) do{}while(0)
 #endif
 
-// TODO: these values need some serious profiling
-#define MINAR_INITIAL_EVENT_POOL_SIZE           4
-#define MINAR_ADDITIONAL_EVENT_POOLS_SIZE       4
+/**
+ * Parameters to control the initial size and growth increments for the pool of
+ * CallbackNodes. The default values are expected to come from root level target
+ * descriptions; but may be overridden by platform or application specific
+ * configurations.
+ *
+ * TODO: these default values need some serious profiling
+ */
+#ifndef YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE
+#define YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE      50
+#endif
+#ifndef YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE
+#define YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE 100
+#endif
 
 using mbed::util::ExtendablePoolAllocator;
 using mbed::util::CriticalSectionLock;
@@ -116,7 +127,7 @@ struct CallbackNode {
             if (allocator == NULL) {
                 MBED_UTIL_RUNTIME_ERROR("Unable to create allocator for CallbackNode");
             }
-            if (!allocator->init(MINAR_INITIAL_EVENT_POOL_SIZE, MINAR_ADDITIONAL_EVENT_POOLS_SIZE, sizeof(CallbackNode), traits)) {
+            if (!allocator->init(YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE, YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE, sizeof(CallbackNode), traits)) {
                 MBED_UTIL_RUNTIME_ERROR("Unable to initialize allocator for CallbackNode");
             }
         }
@@ -300,7 +311,7 @@ minar::SchedulerData::SchedulerData()
     UAllocTraits_t traits;
 
     traits.flags = UALLOC_TRAITS_NEVER_FREE;
-    if (!dispatch_tree.init(MINAR_INITIAL_EVENT_POOL_SIZE, MINAR_ADDITIONAL_EVENT_POOLS_SIZE, traits)) {
+    if (!dispatch_tree.init(YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE, YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE, traits)) {
         MBED_UTIL_RUNTIME_ERROR("Unable to initialize binary heap for SchedulerData");
     }
 }
