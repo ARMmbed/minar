@@ -51,7 +51,11 @@ extern "C" {
  * descriptions; but may be overridden by platform or application specific
  * configurations.
  *
- * TODO: these default values need some serious profiling
+ * @note: The values below take effect only if config definitions in the target
+ * hierarchy don't include defaults. Refer to the output of 'yotta config' for
+ * available defaults.
+ *
+ * TODO: these default values need some serious profiling.
  */
 #ifndef YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE
 #define YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE      50
