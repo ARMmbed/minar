@@ -227,7 +227,7 @@ extern "C" int main(void) {
 }
 ```
 
-MINAR encourages an asychronous programming style in which functions that are expected to take a lot of time return immediately and post an event when they're done. This is again different from mbed classic, where lots of functions (for example functions related to I/O operations) are blocking. Some of these blocking functions are still present in mbed OS, but their use is discouraged. Support for non-blocking operations in mbed OS is already in place for some modules and will be enhanced in the future. 
+MINAR encourages an asynchronous programming style in which functions that are expected to take a lot of time return immediately and post an event when they're done. This is again different from mbed classic, where lots of functions (for example functions related to I/O operations) are blocking. Some of these blocking functions are still present in mbed OS, but their use is discouraged. Support for non-blocking operations in mbed OS is already in place for some modules and will be enhanced in the future.
 "Reasonable" blocking behaviour is still fine. You don't need to use asynchronous calls for everything; if you need to wait "about" a microsecond for something to happen (using for example an empty for loop), that's fine in most cases. The definition of "reasonable" depends a lot on the requirements of your particular application.
 
 # Recap
