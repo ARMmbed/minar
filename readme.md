@@ -111,13 +111,13 @@ while(true) {
 	// The next event to execute (sorted by execution time) is always
 	// located at the top of the queue
 	next = peekNext();
-	now_plus_tolerance = now + next-­>tolerance; // consider scheduling tolerance
+	now_plus_tolerance = now + next->tolerance; // consider scheduling tolerance
 
-	if(timeIsInPeriod(last_dispatch, next-­>call_before, now_plus_tolerance)) {
+	if(timeIsInPeriod(last_dispatch, next->call_before, now_plus_tolerance)) {
 		// The next event in the queue is due, execute it now
-		next-­>call(); // actual event execution
+		next->call(); // actual event execution
 
-		if(!next-­>period) {
+		if(!next->period) {
 			pop(next); // we're done with this event
 		} else {
 			reschedule(next); // periodic event, re-schedule it
@@ -125,7 +125,7 @@ while(true) {
 	} else {
 		// Nothing to do for now, so go to sleep until the next event
 		// in the queue in due
-		sleepFromUntil(now, peekNext()-­>call_before);
+		sleepFromUntil(now, peekNext()->call_before);
 	}
 }
 ```
