@@ -1,6 +1,7 @@
 # MINAR scheduler
 
-MINAR is an *event scheduler*. Applications instruct MINAR to execute blocks of code called *events* (either immediately, or in the future), and MINAR decides when to run those blocks based on their scheduled execution time.  When there's nothing to execute, MINAR puts the MCU to sleep.
+MINAR is an *event scheduler*. Applications instruct MINAR to execute blocks of code called *events* (either immediately, or in the future), and MINAR decides when to run those blocks based on their scheduled execution time. When there's nothing to execute, MINAR puts the MCU to sleep.
+
 A (very) simplified view of MINAR's main loop can be found below (we'll improve it later):
 
 ```
@@ -13,7 +14,7 @@ while (true) {
 
 ## Events
 
-In MINAR, an *event* is a pointer to a function, plus a specific binding of the function's arguments. The event is created from a [FunctionPointer](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/FunctionPointer.h) by calling its `bind` method. Although the `FunctionPointer` implementation was largely rewritten in mbed OS, it serves the same purpose as it did in mbed classic: it keeps a pointer to a function or a method. Usage example:
+In MINAR, an *event* is a pointer to a function, plus a specific binding of the function's arguments. The event is created from a [FunctionPointer](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/FunctionPointer.h) by calling its `bind` method. Although the `FunctionPointer` implementation was largely rewritten in mbed OS, it serves the same purpose as it did in mbed Classic: it keeps a pointer to a function or a method. Usage example:
 
 ```
 #include "mbed.h"
@@ -42,9 +43,9 @@ void test() {
 }
 ```
 
-At the moment of writing, there are implementations of `FunctionPointer` for functions without argument (`FunctionPointer0`), as well as functions with one argument (`FunctionPointer1`), two arguments (`FunctionPointer2`) and three arguments (`FunctionPointer3`).
+At the moment, there are implementations of `FunctionPointer` for functions without an argument (`FunctionPointer0`), as well as functions with one argument (`FunctionPointer1`), two arguments (`FunctionPointer2`) and three arguments (`FunctionPointer3`).
 
-In order to create an event from a function pointer, its `bind` method needs to be called. `bind` takes a set of fixed values for the function's arguments (if the function has arguments) and creates a [FunctionPointerBind](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/FunctionPointerBind.h) instance.  `FunctionPointerBind` keeps a copy of those fixed values and allows one to call the function later with those fixed arguments without having to specify them again. This is best explained by an example. Building on top of the code above:
+In order to create an event from a function pointer, its `bind` method needs to be called. `bind` takes a set of fixed values for the function's arguments (if the function has arguments) and creates a [FunctionPointerBind](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/FunctionPointerBind.h) instance. `FunctionPointerBind` keeps a copy of those fixed values and allows us to call the function later with those fixed arguments without having to specify them again. This is best explained by an example. Building on top of the code above:
 
 ```
 // FunctionPointerBind is templated on the return type of the bound function
@@ -58,7 +59,7 @@ bind_of_f1();      // equivalent to ptr_to_f1.call("test")
 bind1_of_m();      // equivalent to ptr_to_m.call(0)
 bind2_of_m();      // equivalent to ptr_to_m.call(10)
 ```
-(many more examples involving `FunctionPointer` and `Event` can be found [here](https://github.com/ARMmbed/mbed-sdk-private/blob/master/test/EventHandler/main.cpp))
+(Many more examples involving `FunctionPointer` and `Event` can be found [here](https://github.com/ARMmbed/mbed-sdk-private/blob/master/test/EventHandler/main.cpp))
 
 The size of storage for the argument's values in `FunctionPointerBind` is fixed, which means that all `FunctionPointerBind` instances have the same size in memory. If the combined size of the arguments of `bind` is larger than the size of storage in `FunctionPointerBind`, you'll get a compiler error.
 
@@ -68,25 +69,26 @@ A MINAR [Event](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/Eve
 typedef FunctionPointerBind<void> Event;
 ```
 
-In conclusion, using the mechanisms shown above, you can schedule any kind of function with various argument(s) (as long as the function doesn't return anything and the total storage space required for its arguments is less than the fixed storage size in `FunctionPointerBind`) by instantiating the proper `FunctionPointer` class with that function and then calling `bind` on the `FunctionPointer` instance.
+In conclusion, using the mechanisms shown above, you can schedule any kind of function with various argument(s) by instantiating the proper `FunctionPointer` class with that function and then calling `bind` on the `FunctionPointer` instance. This will work so long as the function doesn't return anything and the total storage space required for its arguments is less than the fixed storage size in `FunctionPointerBind`.
 
 ## Using events
 
-To actually schedule an event, you call the `postCallback` function in MINAR. Building on top of the code above:
+To actually schedule an event, you call the `postCallback` function in MINAR. Building on the code above:
 
 ```
 minar::Scheduler::postCallback(bind_of_f0);
-// note that f1 above can't be an Event, since it returns something
+// note that f1 above can't be an event, since it returns something
 ```
 
-`postCallback` adds `bind_of_f0` into the MINAR event queue, scheduling it to be executed as soon as possible.  When calling `postCallback` you can specify a few more attributes of the event:
+`postCallback` adds `bind_of_f0` into the MINAR event queue, scheduling it to be executed as soon as possible. When calling `postCallback` you can specify a few more attributes for the event:
 
-- `period`: the event will run periodically with the given period
-- `delay`: the event will be executed after the specified delay
+- `period`: the event will run periodically, with the specified interval.
+- `delay`: the event will be executed after the specified delay.
 - `tolerance`: the tolerance for the event's execution time.
 
 Periods, delays and tolerances are expressed in _ticks_. Ticks are an internal MINAR type and the actual duration of a tick depends on the platform on which MINAR is running, so using ticks directly is not recommended. You can convert from ticks to milliseconds by calling `minar::milliseconds`.
-Period, delay and tolerance can be specified in any order. Some examples below:
+
+Period, delay and tolerance can be specified in any order. Some examples:
 
 ```
 void f() {
@@ -107,7 +109,7 @@ With this in mind, we can now construct a better (but still simplified) pseudo-c
 
 ```
 while(true) {
-	// Look at the next event in the queue
+	// Look at the next event in the queue:
 	// The next event to execute (sorted by execution time) is always
 	// located at the top of the queue
 	next = peekNext();
@@ -130,7 +132,7 @@ while(true) {
 }
 ```
 
-The above pseudo-code sequence should be enough to explain a very important feature of MINAR: **MINAR is not a pre-emptive scheduler**. The user events execute uninterrupted (`next->call()` above), control gets back to MINAR's event loop when the event exits. No pre-emption means that you won't have to worry about complex, hard to understand synchronization issues between different parts of your application, like you'd have to do in a traditional RTOS. However, it also means that **MINAR is not a real time scheduler**. If your callbacks take a lot of time to execute, some other callbacks in the system might start later than expected. Consider a simple example:
+The above pseudo-code sequence should be enough to explain a very important feature of MINAR: **MINAR is not a pre-emptive scheduler**. The user events execute uninterrupted (`next->call()` above); control goes back to MINAR's event loop when the event exits. No pre-emption means that you won't have to worry about complex, hard to understand synchronization issues between different parts of your application, like you'd have to do in a traditional RTOS. However, it also means that **MINAR is not a real time scheduler**. If your callbacks take a lot of time to execute, some other callbacks in the system might start later than expected. Consider a simple example:
 
 ```
 void f(void) {
@@ -150,8 +152,9 @@ minar::Scheduler::postCallback(e).delay(minar::milliseconds(10));
 // 'e' would then execute after 105ms instead of 10ms as originally intended
 ```
 
-To avoid this kind of situation, remember to **keep the code for your events as short as possible**. This will give other events a chance to execute in time.
-This also means that **infinite loops can't be used in your application code anymore**. In mbed classic (and traditional embedded programming in general) the following pattern is quite common:
+To avoid this kind of situation, remember to **keep the code for your events as short as possible**. This will give other events a chance to execute in time. 
+
+This also means that **you can't use infinite loops in your application code any more**. In mbed Classic (and traditional embedded programming in general) the following pattern is quite common:
 
 ```
 // WARNING: don't do this in mbed OS.
@@ -227,16 +230,17 @@ extern "C" int main(void) {
 }
 ```
 
-MINAR encourages an asynchronous programming style in which functions that are expected to take a lot of time return immediately and post an event when they're done. This is again different from mbed classic, where lots of functions (for example functions related to I/O operations) are blocking. Some of these blocking functions are still present in mbed OS, but their use is discouraged. Support for non-blocking operations in mbed OS is already in place for some modules and will be enhanced in the future.
-"Reasonable" blocking behaviour is still fine. You don't need to use asynchronous calls for everything; if you need to wait "about" a microsecond for something to happen (using for example an empty for loop), that's fine in most cases. The definition of "reasonable" depends a lot on the requirements of your particular application.
+MINAR encourages an asynchronous programming style in which functions that are expected to take a lot of time return immediately and post an event when they're done. This is again different from mbed Classic, where lots of functions (for example functions related to I/O operations) are blocking. Some of these blocking functions are still present in mbed OS, but their use is discouraged. Support for non-blocking operations in mbed OS is already in place for some modules and will be enhanced in the future.
+
+"Reasonable" blocking behaviour is still fine. You don't need to use asynchronous calls for everything; if you need to wait "about" a microsecond for something to happen (using, for example, an empty **for** loop), that's fine in most cases. The definition of "reasonable" depends on the requirements of your particular application.
 
 # Recap
 
-- MINAR is an event scheduler, always enabled in mbed OS
+- MINAR is an event scheduler, always enabled in mbed OS.
 - You can schedule events with MINAR. Events are regular C/C++ functions.
 - MINAR is not a pre-emptive scheduler. Control gets back to MINAR when the currently scheduled event finishes execution.
-- Events shouldn't take too much time to execute
-- Events functions should never block in an infinite loop
-- Your applications start with `app_start` now, not with `main`
-- You are encouraged to use the new non-blocking APIs in mbed OS as much as possible
+- Events shouldn't take too much time to execute.
+- Event functions should never block in an infinite loop.
+- Your applications start with `app_start` now, not with `main`.
+- You are encouraged to use the new non-blocking APIs in mbed OS as much as possible.
 
