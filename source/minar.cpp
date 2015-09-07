@@ -16,7 +16,9 @@
  */
 
 #include "minar/minar.h"
+#ifndef YOTTA_CFG_POSIX
 #include "mbed.h"
+#endif /* #ifndef YOTTA_CFG_POSIX */
 
 #include <stdlib.h>
 #include <limits.h>
