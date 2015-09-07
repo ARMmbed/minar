@@ -21,8 +21,12 @@
   "dependencies": {
     "compiler-polyfill": "~1.0.3",
     "minar-platform": "~0.3.0",
-    "mbed-drivers": "~0.7.0",
     "core-util": "~0.0.6"
+  },
+  "targetDependencies": {
+    "mbed": {
+      "mbed-drivers": "~0.7.0"
+    }
   },
   "scripts": {
     "testReporter": [
