@@ -43,7 +43,7 @@ enum Constants{
 };
 
 /// Basic callback type
-typedef mbed::Event callback_t;
+typedef mbed::util::Event callback_t;
 
 /// Internal time type
 typedef platform::tick_t tick_t;
@@ -103,7 +103,7 @@ class Scheduler{
 
 
         // Function for posting callbacks using FunctionPointer objects without arguments
-        static CallbackAdder postCallback(mbed::FunctionPointer& callback)
+        static CallbackAdder postCallback(mbed::util::FunctionPointer& callback)
         {
             return postCallback(callback.bind());
         }
@@ -112,13 +112,13 @@ class Scheduler{
         // and objects/member pointers without arguments
         static CallbackAdder postCallback(void (*callback)(void))
         {
-            return postCallback(mbed::FunctionPointer(callback).bind());
+            return postCallback(mbed::util::FunctionPointer(callback).bind());
         }
 
         template<typename T>
         static CallbackAdder postCallback(T *object, void (T::*member)())
         {
-            return postCallback(mbed::FunctionPointer(object, member).bind());
+            return postCallback(mbed::util::FunctionPointer(object, member).bind());
         }
 
         static int cancelCallback(callback_handle_t handle);
