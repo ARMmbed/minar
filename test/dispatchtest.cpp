@@ -22,6 +22,9 @@
 
 #include "mbed.h"
 #include "minar/minar.h"
+#include "mbed-util/FunctionPointer.h"
+
+using mbed::util::FunctionPointer0;
 
 static DigitalOut led1(LED1);
 static DigitalOut led2(LED2);

@@ -19,6 +19,10 @@
 #include "minar/minar.h"
 #include "mbed/mbed.h"
 #include "mbed/test_env.h"
+#include "mbed-util/FunctionPointer.h"
+
+using mbed::util::FunctionPointer0;
+using mbed::util::FunctionPointer1;
 
 // Minimum and maximum allowed values of "cnt", computed in accordance with the
 // various periods of tolerances of events in main(). TODO: actually check these
