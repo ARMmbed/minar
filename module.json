@@ -21,7 +21,7 @@
   "dependencies": {
     "compiler-polyfill": "~1.0.3",
     "minar-platform": "~0.3.0",
-    "core-util": "~0.1.0"
+    "core-util": "~0.2.0"
   },
   "scripts": {
     "testReporter": [
