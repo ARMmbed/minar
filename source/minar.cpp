@@ -22,10 +22,10 @@
 
 #include "minar-platform/minar_platform.h"
 
-#include "mbed-util/ExtendablePoolAllocator.h"
-#include "mbed-util/CriticalSectionLock.h"
-#include "mbed-util/BinaryHeap.h"
-#include "mbed-util/mbed-util.h"
+#include "core-util/ExtendablePoolAllocator.h"
+#include "core-util/CriticalSectionLock.h"
+#include "core-util/BinaryHeap.h"
+#include "core-util/core-util.h"
 
 //#define __MINAR_TRACE_MEMORY__
 //#define __MINAR_TRACE_DISPATCH__
@@ -108,7 +108,7 @@ struct CallbackNode {
         (void)size;
         void *p = get_allocator()->alloc();
         if (NULL == p) {
-            MBED_UTIL_RUNTIME_ERROR("Unable to allocate CallbackNode");
+            CORE_UTIL_RUNTIME_ERROR("Unable to allocate CallbackNode");
         }
         return p;
     }
@@ -142,10 +142,10 @@ struct CallbackNode {
             traits.flags = UALLOC_TRAITS_NEVER_FREE; // allocate in the never-free heap
             allocator = new ExtendablePoolAllocator;
             if (allocator == NULL) {
-                MBED_UTIL_RUNTIME_ERROR("Unable to create allocator for CallbackNode");
+                CORE_UTIL_RUNTIME_ERROR("Unable to create allocator for CallbackNode");
             }
             if (!allocator->init(YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE, YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE, sizeof(CallbackNode), traits)) {
-                MBED_UTIL_RUNTIME_ERROR("Unable to initialize allocator for CallbackNode");
+                CORE_UTIL_RUNTIME_ERROR("Unable to initialize allocator for CallbackNode");
             }
         }
         return allocator;
@@ -276,7 +276,7 @@ minar::Scheduler* minar::Scheduler::instance(){
 
         minar::platform::init();
 
-        MBED_UTIL_ASSERT(staticScheduler->data->dispatch_tree.get_num_elements() == 0 && "State not clean: cannot init.");
+        CORE_UTIL_ASSERT(staticScheduler->data->dispatch_tree.get_num_elements() == 0 && "State not clean: cannot init.");
 
         staticScheduler->data->last_dispatch = minar::platform::getTime();
         staticScheduler->data->current_dispatch = staticScheduler->data->last_dispatch;
@@ -329,7 +329,7 @@ minar::SchedulerData::SchedulerData()
 
     traits.flags = UALLOC_TRAITS_NEVER_FREE;
     if (!dispatch_tree.init(YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE, YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE, traits)) {
-        MBED_UTIL_RUNTIME_ERROR("Unable to initialize binary heap for SchedulerData");
+        CORE_UTIL_RUNTIME_ERROR("Unable to initialize binary heap for SchedulerData");
     }
 }
 
@@ -488,7 +488,7 @@ minar::callback_handle_t minar::SchedulerData::postGeneric(
            minar::tick_t interval,
            minar::tick_t double_sided_tolerance
 ){
-    MBED_UTIL_ASSERT(double_sided_tolerance < (minar::platform::Time_Mask/2) + 1);//, "Callback tolerance greater than time wrap-around.");
+    CORE_UTIL_ASSERT(double_sided_tolerance < (minar::platform::Time_Mask/2) + 1);//, "Callback tolerance greater than time wrap-around.");
 
     ytTraceDispatch("[post %lx %lx %p]\n", minar::platform::getTime(), at, addressForFunction(cb));
 
@@ -519,7 +519,7 @@ int minar::SchedulerData::cancel(minar::callback_handle_t handle) {
 /// convert milliseconds into the internal "ticks" time representation
 minar::tick_t minar::milliseconds(uint32_t milliseconds){
     const uint64_t ticks = (((uint64_t) milliseconds) * ((uint64_t) minar::platform::Time_Base)) / 1000;
-    MBED_UTIL_ASSERT(ticks < minar::platform::Time_Mask);//, @"Callback delay greater than time wrap-around.");
+    CORE_UTIL_ASSERT(ticks < minar::platform::Time_Mask);//, @"Callback delay greater than time wrap-around.");
     return (minar::tick_t) (minar::platform::Time_Mask & ticks);
 }
 
@@ -550,7 +550,7 @@ static minar::tick_t minar::smallestTimeIncrement(minar::tick_t from, minar::tic
     if(to_a > from && or_b < from)
         return to_a;
     //if(to_a < from && or_b > from)
-    MBED_UTIL_ASSERT(to_a < from && or_b >= from);//, @" ");
+    CORE_UTIL_ASSERT(to_a < from && or_b >= from);//, @" ");
     return or_b;
 }
 
