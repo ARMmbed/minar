@@ -22,10 +22,10 @@
 
 #include "minar-platform/minar_platform.h"
 
-#include "mbed-util/ExtendablePoolAllocator.h"
-#include "mbed-util/CriticalSectionLock.h"
-#include "mbed-util/BinaryHeap.h"
-#include "mbed-util/mbed-util.h"
+#include "core-util/ExtendablePoolAllocator.h"
+#include "core-util/CriticalSectionLock.h"
+#include "core-util/BinaryHeap.h"
+#include "core-util/mbed-util.h"
 
 //#define __MINAR_TRACE_MEMORY__
 //#define __MINAR_TRACE_DISPATCH__

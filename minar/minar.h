@@ -22,8 +22,8 @@
 #include "minar-platform/minar_platform.h"
 //#include "mbed.h"
 // [TODO] change this
-#include "mbed-util/Event.h"
-#include "mbed-util/FunctionPointer.h"
+#include "core-util/Event.h"
+#include "core-util/FunctionPointer.h"
 
 namespace minar{
 
