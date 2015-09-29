@@ -22,7 +22,7 @@
 
 #include "mbed.h"
 #include "minar/minar.h"
-#include "mbed-util/FunctionPointer.h"
+#include "core-util/FunctionPointer.h"
 
 using mbed::util::FunctionPointer0;
 
