@@ -19,7 +19,7 @@
 #include "minar/minar.h"
 #include "mbed/mbed.h"
 #include "mbed/test_env.h"
-#include "mbed-util/FunctionPointer.h"
+#include "core-util/FunctionPointer.h"
 
 using mbed::util::FunctionPointer0;
 using mbed::util::FunctionPointer1;
