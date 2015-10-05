@@ -19,9 +19,9 @@
     }
   ],
   "dependencies": {
-    "compiler-polyfill": "~1.0.3",
-    "minar-platform": "~0.3.0",
-    "core-util": "~0.2.0"
+    "compiler-polyfill": "~1.1.0",
+    "minar-platform": "~0.4.0",
+    "core-util": "~0.3.0"
   },
   "scripts": {
     "testReporter": [
