@@ -23,6 +23,7 @@
 #include "mbed.h"
 #include "minar/minar.h"
 #include "core-util/FunctionPointer.h"
+#include "mbed/test_env.h"
 
 using mbed::util::FunctionPointer0;
 
@@ -39,9 +40,18 @@ static void toggleLED2()
     led2 = !led2;
 }
 
+static void testComplete()
+{
+    MBED_HOSTTEST_RESULT(true);
+}
+
 void app_start(int, char*[])
 {
-    printf("Test starting\r\n");
+    MBED_HOSTTEST_TIMEOUT(20);
+    MBED_HOSTTEST_SELECT(default);
+    MBED_HOSTTEST_DESCRIPTION(Dispatch test);
+
+    MBED_HOSTTEST_START("DISPATCH_TEST");
 
     minar::Scheduler::postCallback(FunctionPointer0<void>(toggleLED1).bind())
         .period(minar::milliseconds(500))
@@ -50,5 +60,9 @@ void app_start(int, char*[])
     minar::Scheduler::postCallback(FunctionPointer0<void>(toggleLED2).bind())
         .period(minar::milliseconds(250))
         .tolerance(minar::milliseconds(10));
+
+    minar::Scheduler::postCallback(FunctionPointer0<void>(testComplete).bind())
+        .delay(minar::milliseconds(15000))
+        .tolerance(minar::milliseconds(100));
 }
 
