@@ -19,9 +19,9 @@
     }
   ],
   "dependencies": {
-    "compiler-polyfill": "~1.1.0",
-    "minar-platform": "~0.4.0",
-    "core-util": "~0.3.0"
+    "compiler-polyfill": "^1.1.0",
+    "minar-platform": "^1.0.0",
+    "core-util": "^1.0.0"
   },
   "scripts": {
     "testReporter": [
@@ -31,5 +31,9 @@
       "-v",
       "-V"
     ]
-  }
+  },
+  "keywords": [
+    "mbed",
+    "mbed-official"
+  ]
 }
