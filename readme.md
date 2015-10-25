@@ -59,7 +59,7 @@ bind_of_f1();      // equivalent to ptr_to_f1.call("test")
 bind1_of_m();      // equivalent to ptr_to_m.call(0)
 bind2_of_m();      // equivalent to ptr_to_m.call(10)
 ```
-(Many more examples involving `FunctionPointer` and `Event` can be found [here](https://github.com/ARMmbed/mbed-sdk-private/blob/master/test/EventHandler/main.cpp))
+(Many more examples involving `FunctionPointer` and `Event` can be found [here](https://github.com/ARMmbed/core-util/blob/master/test/EventHandler/main.cpp))
 
 The size of storage for the argument's values in `FunctionPointerBind` is fixed, which means that all `FunctionPointerBind` instances have the same size in memory. If the combined size of the arguments of `bind` is larger than the size of storage in `FunctionPointerBind`, you'll get a compiler error.
 
