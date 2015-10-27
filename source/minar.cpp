@@ -387,10 +387,11 @@ int minar::SchedulerData::start(){
                 //
                 // We have to perform this update with interrupts disabled
                 // because we use last_dispatch for sorting dispatch_tree
-                if(dispatch_tree.get_num_elements() > 0)
-                    last_dispatch = smallestTimeIncrement(last_dispatch, now, (dispatch_tree.get_root())->call_before);
-                else
-                    last_dispatch = smallestTimeIncrement(last_dispatch, now, next->call_before);
+                //
+                // next is guaranteed to be the next item in must-execute-by
+                // order, since the callback list is sorted in must-execute-by
+                // order.
+                last_dispatch = smallestTimeIncrement(last_dispatch, now, next->call_before);
 
                 const minar::tick_t lag = wrapTime(now - last_dispatch);
                 if(lag > Warn_Lag_Ticks)
