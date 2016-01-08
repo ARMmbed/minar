@@ -14,7 +14,7 @@ while (true) {
 
 ## Events
 
-In MINAR, an *event* is a pointer to a function, plus a specific binding of the function's arguments. The event is created from a [FunctionPointer](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/FunctionPointer.h) by calling its `bind` method. Although the `FunctionPointer` implementation was largely rewritten in mbed OS, it serves the same purpose as it did in mbed Classic: it keeps a pointer to a function or a method. Usage example:
+In MINAR, an *event* is a pointer to a function, plus a specific binding of the function's arguments. The event is created from a [FunctionPointer](https://github.com/ARMmbed/core-util/blob/master/core-util/FunctionPointer.h) by calling its `bind` method. Although the `FunctionPointer` implementation was largely rewritten in mbed OS, it serves the same purpose as it did in mbed Classic: it keeps a pointer to a function or a method. Usage example:
 
 ```
 #include "mbed.h"
@@ -45,7 +45,7 @@ void test() {
 
 At the moment, there are implementations of `FunctionPointer` for functions without an argument (`FunctionPointer0`), as well as functions with one argument (`FunctionPointer1`), two arguments (`FunctionPointer2`) and three arguments (`FunctionPointer3`).
 
-In order to create an event from a function pointer, its `bind` method needs to be called. `bind` takes a set of fixed values for the function's arguments (if the function has arguments) and creates a [FunctionPointerBind](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/FunctionPointerBind.h) instance. `FunctionPointerBind` keeps a copy of those fixed values and allows us to call the function later with those fixed arguments without having to specify them again. This is best explained by an example. Building on top of the code above:
+In order to create an event from a function pointer, its `bind` method needs to be called. `bind` takes a set of fixed values for the function's arguments (if the function has arguments) and creates a [FunctionPointerBind](https://github.com/ARMmbed/core-util/blob/master/core-util/FunctionPointerBind.h) instance. `FunctionPointerBind` keeps a copy of those fixed values and allows us to call the function later with those fixed arguments without having to specify them again. This is best explained by an example. Building on top of the code above:
 
 ```
 // FunctionPointerBind is templated on the return type of the bound function
@@ -63,7 +63,7 @@ bind2_of_m();      // equivalent to ptr_to_m.call(10)
 
 The size of storage for the argument's values in `FunctionPointerBind` is fixed, which means that all `FunctionPointerBind` instances have the same size in memory. If the combined size of the arguments of `bind` is larger than the size of storage in `FunctionPointerBind`, you'll get a compiler error.
 
-A MINAR [Event](https://github.com/ARMmbed/mbed-sdk-private/blob/master/mbed/Event.h ) is simply a `FunctionPointerBind` for functions that don't return any arguments:
+A MINAR [Event](https://github.com/ARMmbed/core-util/blob/master/core-util/Event.h) is simply a `FunctionPointerBind` for functions that don't return any arguments:
 
 ```
 typedef FunctionPointerBind<void> Event;
