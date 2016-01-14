@@ -234,6 +234,21 @@ MINAR encourages an asynchronous programming style in which functions that are e
 
 "Reasonable" blocking behaviour is still fine. You don't need to use asynchronous calls for everything; if you need to wait "about" a microsecond for something to happen (using, for example, an empty **for** loop), that's fine in most cases. The definition of "reasonable" depends on the requirements of your particular application.
 
+## Runtime Warnings
+
+Warnings are printed to the serial port in the following situations:
+
+1. if callbacks take longer than `Warn_Duration_Milliseconds` (10ms) to execute.
+1. if the event loop is lagging (all callbacks are being executed late because there is too much to do) by more than `Warn_Lag_Milliseconds` (500ms).
+
+Warnings can be switched off at compile time by using [`yotta config`](http://yottadocs.mbed.com/reference/config.html) by adding the following to `config.json`.
+
+```
+{
+    "MINAR_NO_RUNTIME_WARNINGS" : true
+}
+```
+
 # Recap
 
 - MINAR is an event scheduler, always enabled in mbed OS.
