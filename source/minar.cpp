@@ -48,11 +48,11 @@ extern "C" {
 #define ytTraceDispatch(...) do{}while(0)
 #endif
 
-#ifndef YOTTA_CFG_MINAR_NO_RUNTIME_WARNINGS
+#if YOTTA_CFG_MINAR_NO_RUNTIME_WARNINGS
+#define ytWarning(...) do{}while(0)
+#else
 #include <stdio.h>
 #define ytWarning(...) printf(__VA_ARGS__)
-#else
-#define ytWarning(...) do{}while(0)
 #endif
 
 /**
