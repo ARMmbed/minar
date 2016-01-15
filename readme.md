@@ -241,7 +241,7 @@ Warnings are printed to the serial port in the following situations:
 1. if callbacks take longer than `Warn_Duration_Milliseconds` (10ms) to execute.
 1. if the event loop is lagging (all callbacks are being executed late because there is too much to do) by more than `Warn_Lag_Milliseconds` (500ms).
 
-Warnings can be switched off at compile time by using [`yotta config`](http://yottadocs.mbed.com/reference/config.html) by adding the following to `config.json`.
+Warnings can be disabled by using [`yotta config`](http://yottadocs.mbed.com/reference/config.html). Just add the following to `config.json`.
 
 ```
 {
