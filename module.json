@@ -1,6 +1,6 @@
 {
   "name": "minar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The mbed OS scheduler.",
   "repository": {
     "type": "git",
