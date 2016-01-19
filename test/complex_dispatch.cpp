@@ -17,8 +17,8 @@
 
 #include <stdio.h>
 #include "minar/minar.h"
-#include "mbed/mbed.h"
-#include "mbed/test_env.h"
+#include "mbed-drivers/mbed.h"
+#include "mbed-drivers/test_env.h"
 #include "core-util/FunctionPointer.h"
 
 using mbed::util::FunctionPointer0;

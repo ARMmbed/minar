@@ -25,7 +25,7 @@
 #include "core-util/ExtendablePoolAllocator.h"
 #include "core-util/CriticalSectionLock.h"
 #include "core-util/BinaryHeap.h"
-#include "core-util/core-util.h"
+#include "core-util/assert.h"
 
 //#define __MINAR_TRACE_MEMORY__
 //#define __MINAR_TRACE_DISPATCH__
