@@ -22,136 +22,19 @@
 
 #include "minar-platform/minar_platform.h"
 
-#include "core-util/ExtendablePoolAllocator.h"
 #include "core-util/CriticalSectionLock.h"
 #include "core-util/BinaryHeap.h"
 #include "core-util/core-util.h"
+#include "minar-internal-headers/CallbackNode.h"
+#include "minar/trace.h"
 
-//#define __MINAR_TRACE_MEMORY__
-//#define __MINAR_TRACE_DISPATCH__
-//#ifdef NDEBUG
-#define __MINAR_NO_RUNTIME_WARNINGS__
-//#endif
-
-#ifdef __MINAR_TRACE_MEMORY__
-extern "C" {
-    #include <stdio.h>
-}
-#define ytTraceMem(...) printf(__VA_ARGS__)
-#else
-#define ytTraceMem(...) do{}while(0)
-#endif
-
-#ifdef __MINAR_TRACE_DISPATCH__
-extern "C" {
-    #include <stdio.h>
-}
-#define ytTraceDispatch(...) printf(__VA_ARGS__)
-#else
-#define ytTraceDispatch(...) do{}while(0)
-#endif
-
-#ifndef __MINAR_NO_RUNTIME_WARNINGS__
-#include <stdio.h>
-#define ytWarning(...) printf(__VA_ARGS__)
-#else
-#define ytWarning(...) do{}while(0)
-#endif
-
-/**
- * Parameters to control the initial size and growth increments for the pool of
- * CallbackNodes. The default values are expected to come from root level target
- * descriptions; but may be overridden by platform or application specific
- * configurations.
- *
- * @note: The values below take effect only if config definitions in the target
- * hierarchy don't include defaults. Refer to the output of 'yotta config' for
- * available defaults.
- *
- * TODO: these default values need some serious profiling.
- */
-#ifndef YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE
-#define YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE      50
-#endif
-#ifndef YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE
-#define YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE 100
-#endif
-
-using mbed::util::ExtendablePoolAllocator;
 using mbed::util::CriticalSectionLock;
 using mbed::util::BinaryHeap;
 using mbed::util::MinCompare;
 
 /// - Private Types
 
-
 namespace minar{
-/// Callbacks are stored as a sorted tree of these, currently just ordered by
-/// 'call_before', which enables a very simple form of coalescing. To do much
-/// better we need to estimate or learn how long each call will take, and use
-/// something like a proper interval tree.
-struct CallbackNode {
-    CallbackNode()
-      : cb(), call_before(0), tolerance(0),
-        interval(0){
-    }
-    CallbackNode(
-        minar::callback_t cb,
-        minar::tick_t call_before,
-        minar::tick_t tolerance,
-        minar::tick_t interval
-    ) : cb(cb), call_before(call_before), tolerance(tolerance),
-        interval(interval){
-    }
-    static void* operator new(std::size_t size){
-        ytTraceMem("CallbackNode alloc %u\n", size);
-        (void)size;
-        void *p = get_allocator()->alloc();
-        if (NULL == p) {
-            CORE_UTIL_RUNTIME_ERROR("Unable to allocate CallbackNode");
-        }
-        return p;
-    }
-
-    static void operator delete(void *p){
-        ytTraceMem("CallbackNode free %u\n", sizeof(CallbackNode));
-        get_allocator()->free(p);
-    }
-
-    /// The callback pointer
-    minar::callback_t cb;
-
-    /// The scheduler will try quite hard to call the function at (or up to
-    /// 'tolerance' before) 'call_before'. In the event that there is more to
-    /// do than time to do it then it may still be called later.
-    minar::tick_t     call_before;
-    minar::tick_t     tolerance;
-
-    /// For more-efficient repeating callbacks, store the interval here and
-    /// re-schedule as soon as execution is completed, without another free &
-    /// alloc.
-    ///
-    /// 0 means do not repeat
-    minar::tick_t     interval;
-
-    static ExtendablePoolAllocator *get_allocator() {
-        static ExtendablePoolAllocator *allocator = NULL;
-
-        if (NULL == allocator) {
-            UAllocTraits_t traits;
-            traits.flags = UALLOC_TRAITS_NEVER_FREE; // allocate in the never-free heap
-            allocator = new ExtendablePoolAllocator;
-            if (allocator == NULL) {
-                CORE_UTIL_RUNTIME_ERROR("Unable to create allocator for CallbackNode");
-            }
-            if (!allocator->init(YOTTA_CFG_MINAR_INITIAL_EVENT_POOL_SIZE, YOTTA_CFG_MINAR_ADDITIONAL_EVENT_POOLS_SIZE, sizeof(CallbackNode), traits)) {
-                CORE_UTIL_RUNTIME_ERROR("Unable to initialize allocator for CallbackNode");
-            }
-        }
-        return allocator;
-    }
-};
-
 struct YTScopeTimer{
     YTScopeTimer(minar::tick_t threshold, const char* msg, const void* ptr)
         : start(minar::platform::getTime()), thr(threshold), msg(msg), ptr(ptr){
