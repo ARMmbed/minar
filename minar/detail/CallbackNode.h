@@ -43,6 +43,7 @@
 #endif
 
 namespace minar{
+namespace detail{
 /// Callbacks are stored as a sorted tree of these, currently just ordered by
 /// 'call_before', which enables a very simple form of coalescing. To do much
 /// better we need to estimate or learn how long each call will take, and use
@@ -109,6 +110,7 @@ struct CallbackNode {
     }
 }; // struct CallbackNode
 
+} // namespace detail
 } // namespace minar
 
 #endif // #ifndef __MINAR_CALLBACKNODE_H__
