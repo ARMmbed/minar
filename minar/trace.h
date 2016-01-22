@@ -39,6 +39,13 @@ extern "C" {
 #define ytTraceDispatch(...) do{}while(0)
 #endif
 
+/* Run time warnings are turned on by default only in debug builds
+ * The user can override this behaviour by setting MINAR_NO_RUNTIME_WARNINGS
+ * in yotta config. Example: yt build -d --config '{"MINAR_NO_RUNTIME_WARNINGS":1}' */
+#ifndef  YOTTA_CFG_MINAR_NO_RUNTIME_WARNINGS
+#define YOTTA_CFG_MINAR_NO_RUNTIME_WARNINGS NDEBUG
+#endif
+
 #if YOTTA_CFG_MINAR_NO_RUNTIME_WARNINGS
 #define ytWarning(...) do{}while(0)
 #else
