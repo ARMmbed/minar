@@ -88,6 +88,8 @@ minar::Scheduler::postCallback(bind_of_f0);
 
 Periods, delays and tolerances are expressed in _ticks_. Ticks are an internal MINAR type and the actual duration of a tick depends on the platform on which MINAR is running, so using ticks directly is not recommended. You can convert from ticks to milliseconds by calling `minar::milliseconds`.
 
+The default value of `tolerance` is 50 milliseconds.
+
 Period, delay and tolerance can be specified in any order. Some examples:
 
 ```
