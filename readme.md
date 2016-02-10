@@ -88,6 +88,8 @@ minar::Scheduler::postCallback(bind_of_f0);
 
 Periods, delays and tolerances are expressed in _ticks_. Ticks are an internal MINAR type and the actual duration of a tick depends on the platform on which MINAR is running, so using ticks directly is not recommended. You can convert from ticks to milliseconds by calling `minar::milliseconds`.
 
+A tolerance is necessary for the efficient scheduling of callbacks. By providing a tolerance, it permits minar to group callbacks together if they have overlapping execution schedules and tolerances. This permits minar to schedule several callbacks in a single wakeup even if there is time between their desired execution times. It's important to provide minar with realistic tolerances, since large tolerances will improve power efficiency. For example, network code can accept significant delays without reduction in performance. The default value of `tolerance` is 50 milliseconds.
+
 Period, delay and tolerance can be specified in any order. Some examples:
 
 ```
