@@ -251,7 +251,7 @@ int minar::SchedulerData::start(){
 
             if(dispatch_tree.get_num_elements() > 0) {
                 CallbackNode *root = dispatch_tree.get_root();
-                now_plus_tolerance = wrapTime(now + root->tolerance);
+                now_plus_tolerance = wrapTime(now + root->tolerance/2);
                 if (timeIsInPeriod(last_dispatch, root->call_before, now_plus_tolerance)) {
                     best = root;
                 }
@@ -378,7 +378,7 @@ minar::callback_handle_t minar::SchedulerData::postGeneric(
 
     CallbackNode* n = new CallbackNode(
         cb,
-        wrapTime(at + interval),
+        wrapTime(at),
         2 * double_sided_tolerance,
         interval
     );
