@@ -19,6 +19,7 @@
 #include "minar/minar.h"
 #include "mbed-drivers/mbed.h"
 #include "greentea-client/test_env.h"
+#include "unity/unity.h"
 #include "core-util/FunctionPointer.h"
 
 using mbed::util::FunctionPointer0;
@@ -105,11 +106,9 @@ void app_start(int, char*[]) {
 
     bool cnt_ok = (cnt >= MIN_ALLOWED_CNT) && (cnt <= MAX_ALLOWED_CNT);
     printf("Final counter value: %d\r\n", cnt);
-    if (!cnt_ok)
-        printf("ERROR: counter value is out of range (should be between %d and %d)\r\n", MIN_ALLOWED_CNT, MAX_ALLOWED_CNT);
-    if (cb_cnt != EXPECTED_CALLBACK_COUNT)
-        printf("ERROR: final callback count is %d, should be %d\r\n", cb_cnt, EXPECTED_CALLBACK_COUNT);
+    TEST_ASSERT_TRUE_MESSAGE(cnt_ok, "Counter value is out of range");
+    TEST_ASSERT_EQUAL_MESSAGE(EXPECTED_CALLBACK_COUNT, cb_cnt, "Wrong call back count!");
 
-    GREENTEA_TESTSUITE_RESULT(cnt_ok && (cb_cnt == 1));
+    GREENTEA_TESTSUITE_RESULT(cnt_ok && (cb_cnt == EXPECTED_CALLBACK_COUNT));
 }
 
