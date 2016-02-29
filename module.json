@@ -23,6 +23,9 @@
     "minar-platform": "^1.0.0",
     "core-util": "^1.0.0"
   },
+  "testDependencies": {
+    "greentea-client": "~0.1.4"
+  },
   "scripts": {
     "testReporter": [
       "mbedgt",

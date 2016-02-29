@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include "minar/minar.h"
 #include "mbed-drivers/mbed.h"
-#include "mbed-drivers/test_env.h"
+#include "greentea-client/test_env.h"
 #include "core-util/FunctionPointer.h"
 
 using mbed::util::FunctionPointer0;
@@ -67,11 +67,8 @@ static void stop_scheduler() {
 }
 
 void app_start(int, char*[]) {
-    MBED_HOSTTEST_TIMEOUT(35);
-    MBED_HOSTTEST_SELECT(default);
-    MBED_HOSTTEST_DESCRIPTION(MINAR complex dispatch test);
-
-    MBED_HOSTTEST_START("MINAR_COMPLEX_DISPATCH");
+    GREENTEA_SETUP(35, "default");
+    
     LED led1("led1", LED1);
     LED led2("led2", LED2);
 
@@ -113,6 +110,6 @@ void app_start(int, char*[]) {
     if (cb_cnt != EXPECTED_CALLBACK_COUNT)
         printf("ERROR: final callback count is %d, should be %d\r\n", cb_cnt, EXPECTED_CALLBACK_COUNT);
 
-    MBED_HOSTTEST_RESULT(cnt_ok && (cb_cnt == 1));
+    GREENTEA_TESTSUITE_RESULT(cnt_ok && (cb_cnt == 1));
 }
 
