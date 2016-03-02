@@ -23,6 +23,10 @@
     "minar-platform": "^1.0.0",
     "core-util": "^1.0.0"
   },
+  "testDependencies": {
+    "greentea-client": "~0.1.4",
+    "unity": "^2.0.0"
+  },
   "scripts": {
     "testReporter": [
       "mbedgt",
