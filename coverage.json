@@ -1,0 +1,13 @@
+
+{
+    "debug":{
+        "options" : {
+            "coverage" : {
+                "modules" : {
+                    "minar" : true
+                }
+            }
+        }
+    }
+}
+        
