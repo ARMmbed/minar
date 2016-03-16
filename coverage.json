@@ -1,0 +1,18 @@
+
+{
+    "debug":{
+        "options" : {
+            "coverage" : {
+                "modules" : {
+                    "minar" : true
+                }
+            }
+        }
+    },
+    "mbed-os": {
+	    "stdio": {
+		    "default-baud": 115200
+	    }
+    }
+}
+        
