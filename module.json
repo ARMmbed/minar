@@ -24,7 +24,7 @@
     "core-util": "^1.0.0"
   },
   "testDependencies": {
-    "greentea-client": "~0.1.4",
+    "greentea-client": ">=0.1.4,<2.0.0",
     "unity": "^2.0.0"
   },
   "scripts": {
