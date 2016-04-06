@@ -220,10 +220,15 @@ bool minar::SchedulerData::CallbackNodeCompare::operator ()(const heap_node_t &a
     // FIXME!!!! double-check that this works for the case where multiple
     // callbacks have the same dispatch time, and we pop one, set Dispatch equal
     // to that time, then re-sort
-    if((a->call_before - sched.last_dispatch) < (b->call_before - sched.last_dispatch))
+    minar::tick_t a_late_exe_t = a->call_before + a->tolerance;
+    minar::tick_t b_late_exe_t = b->call_before + b->tolerance;
+
+    if((a_late_exe_t - sched.last_dispatch) < (b_late_exe_t - sched.last_dispatch)) {
         return true;
-    else
+    }
+    else {
         return false;
+    }
     return true;
 }
 
@@ -252,7 +257,7 @@ int minar::SchedulerData::start(){
             if(dispatch_tree.get_num_elements() > 0) {
                 CallbackNode *root = dispatch_tree.get_root();
                 now_plus_tolerance = wrapTime(now + root->tolerance);
-                if (timeIsInPeriod(last_dispatch, root->call_before, now_plus_tolerance)) {
+                if (timeIsInPeriod(last_dispatch, root->call_before + root->tolerance, now_plus_tolerance + root->tolerance)) {
                     best = root;
                 }
             }
@@ -338,7 +343,7 @@ int minar::SchedulerData::start(){
             //
             // note that current_dispatch is always in the future (or equal)
             // compared to last_dispatch
-            current_dispatch = wrapTime(next->call_before - next->tolerance/2);
+            current_dispatch = wrapTime(next->call_before - next->tolerance);
 
             if(next->interval){
                 // recycle the callback for next time: do that here so that the
@@ -379,7 +384,7 @@ minar::callback_handle_t minar::SchedulerData::postGeneric(
     CallbackNode* n = new CallbackNode(
         cb,
         wrapTime(at + interval),
-        2 * double_sided_tolerance,
+        double_sided_tolerance,
         interval
     );
     dispatch_tree.insert(n);
