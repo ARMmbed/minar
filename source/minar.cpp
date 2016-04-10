@@ -25,12 +25,13 @@
 #include "core-util/CriticalSectionLock.h"
 #include "core-util/BinaryHeap.h"
 #include "core-util/assert.h"
-#include "minar-internal-headers/CallbackNode.h"
+#include "minar/detail/CallbackNode.h"
 #include "minar/trace.h"
 
 using mbed::util::CriticalSectionLock;
 using mbed::util::BinaryHeap;
 using mbed::util::MinCompare;
+using minar::detail::CallbackNode;
 
 /// - Private Types
 
