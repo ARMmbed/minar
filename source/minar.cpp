@@ -444,13 +444,16 @@ static void* minar::addressForFunction(minar::callback_t){
     return NULL;
 }
 
+// return true if `time' is in the range [`start', `end'], where
+// all the range may wrap around to zero (`end' may be less than
+// `start')
 static bool minar::timeIsInPeriod(minar::tick_t start, minar::tick_t time, minar::tick_t end){
-    // Taking care to handle wrapping: (M = now + Minumum_Sleep)
-    //   Case (A.1)
+    // Taking care to handle wrapping:
+    //   Case (A.1): this case also allows S==T==E
     //                       S    T   E
     //      0 ---------------|----|---|-- 0xf
     //
-    //   Case (A.2): this case also allows S==T==E
+    //   Case (A.2)
     //         E                 S    T
     //      0 -|-----------------|----|-- 0xf
     //
@@ -458,8 +461,8 @@ static bool minar::timeIsInPeriod(minar::tick_t start, minar::tick_t time, minar
     //         T   E                 S
     //      0 -|---|-----------------|--- 0xf
     //
-    if((time >= start && ( time < end ||    // (A.1)
-                          start >= end)) || // (A.2)
+    if((time >= start && ( time <= end  || // (A.1)
+                          start > end)) || // (A.2)
         (time < start && end < start && end > time)){  // (B)
         return true;
     }
