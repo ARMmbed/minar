@@ -463,7 +463,7 @@ static bool minar::timeIsInPeriod(minar::tick_t start, minar::tick_t time, minar
     //
     if((time >= start && ( time <= end  || // (A.1)
                           start > end)) || // (A.2)
-        (time < start && end < start && end > time)){  // (B)
+        (time < start && end < start && end >= time)){  // (B)
         return true;
     }
     return false;
