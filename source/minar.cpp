@@ -431,7 +431,7 @@ static minar::tick_t minar::wrapTime(minar::tick_t time){
 static minar::tick_t minar::smallestTimeIncrement(minar::tick_t from, minar::tick_t to_a, minar::tick_t or_b){
     if((to_a >= from && or_b >= from) || (to_a < from && or_b < from))
         return (to_a < or_b)? to_a : or_b;
-    if(to_a > from && or_b < from)
+    if(to_a >= from && or_b < from)
         return to_a;
     //if(to_a < from && or_b > from)
     CORE_UTIL_ASSERT(to_a < from && or_b >= from);//, @" ");
